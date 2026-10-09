@@ -1,7 +1,7 @@
 pipeline {
 agent any
 
-```
+
 stages {
     stage('Checkout Verification') {
         steps {
@@ -32,7 +32,7 @@ stages {
         }
     }
 }
-```
+
 
 }
 
