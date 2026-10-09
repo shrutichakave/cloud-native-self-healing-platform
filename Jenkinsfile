@@ -16,7 +16,6 @@ stages {
             sh 'test -f frontend/index.html'
             sh 'test -f backend/Dockerfile'
             sh 'test -f frontend/Dockerfile'
-
             echo 'Project files verified successfully!'
         }
     }
