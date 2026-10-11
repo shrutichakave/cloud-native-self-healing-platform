@@ -1,38 +1,32 @@
 pipeline {
-agent any
+    agent any
 
-
-stages {
-    stage('Checkout Verification') {
-        steps {
-            echo 'Jenkins pipeline is running!'
-            sh 'git rev-parse --short HEAD'
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Starting CI/CD Pipeline'
+                sh 'git rev-parse --short HEAD'
+            }
         }
-    }
 
-    stage('Verify Project Files') {
-        steps {
-            sh 'test -f backend/server.js'
-            sh 'test -f frontend/index.html'
-            sh 'test -f backend/Dockerfile'
-            sh 'test -f frontend/Dockerfile'
-            echo 'Project files verified successfully!'
+        stage('Verify Files') {
+            steps {
+                sh 'test -f backend/server.js'
+                sh 'test -f frontend/index.html'
+                echo 'Project files verified'
+            }
         }
-    }
 
-    stage('Build Backend Docker Image') {
-        steps {
-            sh 'docker build -t self-healing-backend:v1 ./backend'
+        stage('Build Backend') {
+            steps {
+                sh 'docker build -t self-healing-backend:v1 ./backend'
+            }
         }
-    }
 
-    stage('Build Frontend Docker Image') {
-        steps {
-            sh 'docker build -t self-healing-frontend:v2 ./frontend'
+        stage('Build Frontend') {
+            steps {
+                sh 'docker build -t self-healing-frontend:v2 ./frontend'
+            }
         }
     }
 }
-
-
-}
-
