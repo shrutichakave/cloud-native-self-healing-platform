@@ -1,4 +1,3 @@
-
 resource "aws_security_group" "jenkins_sg" {
   name        = "self-healing-jenkins-sg"
   description = "Security group for Jenkins CI/CD server"
@@ -8,7 +7,7 @@ resource "aws_security_group" "jenkins_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["106.193.190.177/32"]
+    cidr_blocks = ["223.181.56.180/32"]
   }
 
   ingress {
@@ -16,7 +15,7 @@ resource "aws_security_group" "jenkins_sg" {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
-    cidr_blocks = ["106.193.190.177/32"]
+    cidr_blocks = ["223.181.56.180/32"]
   }
 
   egress {
