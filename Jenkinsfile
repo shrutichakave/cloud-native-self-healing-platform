@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -13,7 +14,7 @@ pipeline {
             steps {
                 sh 'test -f backend/server.js'
                 sh 'test -f frontend/index.html'
-                echo 'Project files verified'
+                echo 'Project files verified successfully'
             }
         }
 
@@ -23,10 +24,31 @@ pipeline {
             }
         }
 
+        stage('Scan Backend Image') {
+            steps {
+                sh 'trivy image --severity HIGH,CRITICAL self-healing-backend:v1'
+            }
+        }
+
         stage('Build Frontend') {
             steps {
                 sh 'docker build -t self-healing-frontend:v2 ./frontend'
             }
+        }
+
+        stage('Scan Frontend Image') {
+            steps {
+                sh 'trivy image --severity HIGH,CRITICAL self-healing-frontend:v2'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build and security scans completed successfully.'
+        }
+        failure {
+            echo 'Pipeline failed. Check the Console Output for details.'
         }
     }
 }
