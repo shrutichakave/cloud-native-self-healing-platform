@@ -1,6 +1,11 @@
-
+```groovy
 pipeline {
     agent any
+
+    environment {
+        AWS_REGION = 'ap-south-1'
+        ECR_REGISTRY = '290993050816.dkr.ecr.ap-south-1.amazonaws.com'
+    }
 
     stages {
         stage('Checkout') {
@@ -41,14 +46,47 @@ pipeline {
                 sh 'trivy image --severity HIGH,CRITICAL self-healing-frontend:v2'
             }
         }
+
+        stage('Login to Amazon ECR') {
+            steps {
+                sh '''
+                    aws ecr get-login-password --region "$AWS_REGION" |
+                    docker login --username AWS --password-stdin "$ECR_REGISTRY"
+                '''
+            }
+        }
+
+        stage('Push Backend to ECR') {
+            steps {
+                sh '''
+                    docker tag self-healing-backend:v1 \
+                        "$ECR_REGISTRY/self-healing-backend:v1"
+                    docker push "$ECR_REGISTRY/self-healing-backend:v1"
+                '''
+            }
+        }
+
+        stage('Push Frontend to ECR') {
+            steps {
+                sh '''
+                    docker tag self-healing-frontend:v2 \
+                        "$ECR_REGISTRY/self-healing-frontend:v2"
+                    docker push "$ECR_REGISTRY/self-healing-frontend:v2"
+                '''
+            }
+        }
     }
 
     post {
         success {
-            echo 'Build and security scans completed successfully.'
+            echo 'Build, security scans, and ECR image pushes completed successfully.'
         }
         failure {
             echo 'Pipeline failed. Check the Console Output for details.'
         }
+        always {
+            sh 'docker logout "$ECR_REGISTRY" || true'
+        }
     }
 }
+```
