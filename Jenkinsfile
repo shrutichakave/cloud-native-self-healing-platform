@@ -30,7 +30,7 @@ pipeline {
 
         stage('Scan Backend Image') {
             steps {
-                sh 'trivy image --severity HIGH,CRITICAL self-healing-backend:v1'
+                sh '/usr/bin/trivy --config "" image --severity HIGH,CRITICAL self-healing-backend:v1'
             }
         }
 

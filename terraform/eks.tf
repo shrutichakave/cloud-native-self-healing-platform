@@ -8,7 +8,9 @@ resource "aws_eks_cluster" "main" {
       aws_subnet.public_b.id
     ]
 
-    endpoint_public_access = true
+    endpoint_public_access  = true
+    endpoint_private_access = true
+    public_access_cidrs     = ["106.193.214.119/32"]
   }
 
   depends_on = [
