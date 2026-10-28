@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudCare | Cloud Monitoring</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <h2>☁ Cloud<span>Care</span></h2>
+        <p class="menu-title">WORKSPACE</p>
+        <a class="active" href="#dashboard">▦ &nbsp; Dashboard</a>
+        <a href="#services">◈ &nbsp; Services</a>
+        <a href="#monitoring">▤ &nbsp; Monitoring</a>
+        <div class="sidebar-bottom">
+            <p>DEVOPS PROJECT</p>
+            <span>Cloud-Native Platform</span>
+        </div>
+    </aside>
+
+    <main class="main-content" id="dashboard">
+        <header class="topbar">
+            <div>
+                <p class="welcome">OVERVIEW / DASHBOARD</p>
+                <h1>Cloud Monitoring</h1>
+                <p class="subtitle">Monitor your application health and infrastructure.</p>
+            </div>
+            <span class="live-label">● LOCAL ENVIRONMENT</span>
+        </header>
+
+        <section class="summary">
+            <div id="health-alert" class="health-alert" role="alert" hidden>
+                   <strong>⚠ Service Alert: Backend Unhealthy</strong>
+                <p>The backend is not responding. Please check the service.</p>
+               </div>
+            <div class="summary-card">
+                <p>Application Health</p>
+                <h2 id="app-status">Checking...</h2>
+                <span>Backend API status</span>
+            </div>
+            <div class="summary-card">
+                <p>Metrics Collection</p>
+                <h2 id="monitor-status">Prometheus</h2>
+                <span>Application metrics</span>
+            </div>
+            <div class="summary-card">
+                <p>Visualization</p>
+                <h2>Grafana</h2>
+                <span>Monitoring dashboards</span>
+            </div>
+        </section>
+
+        <section class="panel" id="services">
+            <div class="section-heading">
+                <div>
+                    <h2>Service Overview</h2>
+                    <p>Check the status of your application services.</p>
+                </div>
+                <button onclick="checkHealth()">↻ Check Health</button>
+            </div>
+
+            <div class="service-row">
+                <div class="service-icon">BE</div>
+                <div class="service-info">
+                    <h3>Backend API</h3>
+                    <p>Express.js · Port 3000</p>
+                </div>
+                <span id="service-status" class="status">Checking...</span>
+            </div>
+
+            <div class="service-row">
+                <div class="service-icon">PM</div>
+                <div class="service-info">
+                    <h3>Prometheus</h3>
+                    <p>Metrics collection and monitoring</p>
+                </div>
+                <a href="http://localhost:9090/targets" target="_blank" rel="noopener">View Targets ↗</a>
+            </div>
+
+            <div class="service-row">
+                <div class="service-icon">GF</div>
+                <div class="service-info">
+                    <h3>Grafana</h3>
+                    <p>Graphs and monitoring dashboards</p>
+                </div>
+                <a href="http://localhost:3001" target="_blank" rel="noopener">Open Grafana ↗</a>
+            </div>
+            <p id="result" aria-live="polite"></p>
+        </section>
+
+        <section class="panel" id="monitoring">
+            <div class="section-heading">
+                <div>
+                    <h2>Monitoring Center</h2>
+                    <p>Explore live monitoring tools running locally.</p>
+                </div>
+            </div>
+            <div class="tool-grid">
+                <div class="tool-card">
+                    <div class="tool-icon">◉</div>
+                    <h3>Prometheus</h3>
+                    <p>Collects and stores metrics from the backend application.</p>
+                    <a href="http://localhost:9090" target="_blank" rel="noopener">Explore Prometheus →</a>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">▥</div>
+                    <h3>Grafana</h3>
+                    <p>Visualizes monitoring data through charts and dashboards.</p>
+                    <a href="http://localhost:3001" target="_blank" rel="noopener">View Dashboards →</a>
+                </div>
+            </div>
+        </section>
+
+        <footer>CloudCare · Cloud-Native Self-Healing Platform · DevOps Final Project</footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

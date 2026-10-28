@@ -1,121 +1,742 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CloudCare | Cloud Monitoring</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="theme-color" content="#101828">
+    <title>CloudCare | Self-Healing Platform</title>
+
+    <style>
+        :root {
+            --navy: #101828;
+            --navy-light: #1d2939;
+            --blue: #3867f5;
+            --blue-light: #edf2ff;
+            --green: #07845a;
+            --green-light: #e9fbf2;
+            --orange: #b75c08;
+            --orange-light: #fff4e5;
+            --red: #c62828;
+            --red-light: #fff0f0;
+            --text: #182230;
+            --muted: #667085;
+            --border: #e4e7ec;
+            --page: #f4f7fc;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            color: var(--text);
+            background: var(--page);
+        }
+
+        button, a {
+            font: inherit;
+        }
+
+        a {
+            color: var(--blue);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 245px;
+            flex-shrink: 0;
+            background: var(--navy);
+            color: var(--white);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand {
+            font-size: 27px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin: 15px 8px 55px;
+        }
+
+        .brand span {
+            color: #86a7ff;
+        }
+
+        .side-heading {
+            color: #98a2b3;
+            font-size: 12px;
+            letter-spacing: 2px;
+            font-weight: 700;
+            padding: 0 12px;
+            margin-bottom: 15px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 15px 14px;
+            margin-bottom: 8px;
+            color: #e4e7ec;
+            border-radius: 10px;
+        }
+
+        .nav-item.active {
+            background: #293b5c;
+            border-left: 4px solid #86a7ff;
+            color: white;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 24px 12px 0;
+            border-top: 1px solid #344054;
+            line-height: 1.8;
+        }
+
+        .sidebar-footer small {
+            color: #98a2b3;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+
+        main {
+            min-width: 0;
+            flex: 1;
+            padding: 38px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .eyebrow {
+            font-size: 12px;
+            color: var(--blue);
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        h1 {
+            font-size: clamp(28px, 3vw, 40px);
+            margin: 13px 0 8px;
+            letter-spacing: -1.5px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .environment {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--green-light);
+            color: var(--green);
+            border: 1px solid #a6f4c5;
+            border-radius: 9px;
+            padding: 12px 15px;
+            font-size: 12px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .card, .panel {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 3px 10px rgba(16, 24, 40, 0.035);
+        }
+
+        .card {
+            padding: 25px;
+            min-height: 155px;
+        }
+
+        .card-label {
+            color: var(--muted);
+            font-size: 14px;
+            margin: 0 0 18px;
+        }
+
+        .card h2 {
+            font-size: 25px;
+            margin: 0 0 10px;
+            overflow-wrap: anywhere;
+        }
+
+        .card-note {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .health-card {
+            border-color: #a6f4c5;
+            background: #f0fdf6;
+        }
+
+        .health-card h2 {
+            color: var(--green);
+        }
+
+        .panel {
+            padding: 26px;
+            margin-bottom: 24px;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .panel-header h2 {
+            font-size: 21px;
+            margin: 0 0 7px;
+        }
+
+        .panel-header p {
+            color: var(--muted);
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .button {
+            cursor: pointer;
+            border: 0;
+            background: var(--blue);
+            color: white;
+            border-radius: 9px;
+            padding: 12px 16px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .button:hover {
+            background: #254edb;
+        }
+
+        .button:disabled {
+            opacity: 0.65;
+            cursor: wait;
+        }
+
+        .service-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 19px 0;
+            border-top: 1px solid #eaecf0;
+        }
+
+        .service-icon {
+            display: grid;
+            place-items: center;
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            background: var(--blue-light);
+            color: var(--blue);
+            font-weight: 800;
+        }
+
+        .service-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .service-info h3 {
+            margin: 0 0 6px;
+            font-size: 15px;
+        }
+
+        .service-info p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .status {
+            flex-shrink: 0;
+            border-radius: 100px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .status.healthy {
+            color: var(--green);
+            background: var(--green-light);
+        }
+
+        .status.failed {
+            color: var(--red);
+            background: var(--red-light);
+        }
+
+        .status.info {
+            color: var(--orange);
+            background: var(--orange-light);
+        }
+
+        .status.checking {
+            color: #475467;
+            background: #f2f4f7;
+        }
+
+        .alert {
+            display: none;
+            border: 1px solid #fda29b;
+            color: var(--red);
+            background: var(--red-light);
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin: 18px 0;
+            line-height: 1.5;
+        }
+
+        .alert.visible {
+            display: block;
+        }
+
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .history-card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 19px;
+        }
+
+        .history-card h3 {
+            font-size: 16px;
+            margin: 0 0 10px;
+        }
+
+        .history-card p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .tag {
+            display: inline-block;
+            background: var(--orange-light);
+            color: var(--orange);
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 6px 9px;
+            margin-bottom: 12px;
+        }
+
+        .monitor-links {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 20px;
+        }
+
+        .monitor-link {
+            display: block;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+            color: var(--text);
+        }
+
+        .monitor-link:hover {
+            border-color: #b2c5ff;
+            background: #f8faff;
+            text-decoration: none;
+        }
+
+        .monitor-link strong {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .monitor-link span {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            padding: 8px 0 20px;
+        }
+
+        @media (max-width: 1050px) {
+            main {
+                padding: 25px;
+            }
+
+            .sidebar {
+                width: 205px;
+            }
+
+            .cards {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .monitor-links {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 18px;
+            }
+
+            .brand {
+                margin: 4px 5px 18px;
+            }
+
+            .side-heading, .sidebar-footer {
+                display: none;
+            }
+
+            .nav-item {
+                display: inline-block;
+                margin: 0 5px 0 0;
+                padding: 10px;
+            }
+
+            main {
+                padding: 22px 15px;
+            }
+
+            .topbar {
+                display: block;
+            }
+
+            .environment {
+                margin-top: 18px;
+                white-space: normal;
+            }
+
+            .cards, .history-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .panel {
+                padding: 18px;
+            }
+
+            .panel-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .service-row {
+                align-items: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .status {
+                margin-left: 63px;
+            }
+        }
+    </style>
 </head>
+
 <body>
+<div class="layout">
     <aside class="sidebar">
-        <h2>☁ Cloud<span>Care</span></h2>
-        <p class="menu-title">WORKSPACE</p>
-        <a class="active" href="#dashboard">▦ &nbsp; Dashboard</a>
-        <a href="#services">◈ &nbsp; Services</a>
-        <a href="#monitoring">▤ &nbsp; Monitoring</a>
-        <div class="sidebar-bottom">
-            <p>DEVOPS PROJECT</p>
-            <span>Cloud-Native Platform</span>
+        <div class="brand">☁ Cloud<span>Care</span></div>
+
+        <div class="side-heading">WORKSPACE</div>
+        <a class="nav-item active" href="#dashboard">▦ &nbsp; Dashboard</a>
+        <a class="nav-item" href="#services">◈ &nbsp; Services</a>
+        <a class="nav-item" href="#monitoring">▤ &nbsp; Monitoring</a>
+        <a class="nav-item" href="#tests">✓ &nbsp; Test Results</a>
+
+        <div class="sidebar-footer">
+            <small>DEVOPS PROJECT</small><br>
+            Self-Healing Platform
         </div>
     </aside>
 
-    <main class="main-content" id="dashboard">
+    <main id="dashboard">
         <header class="topbar">
             <div>
-                <p class="welcome">OVERVIEW / DASHBOARD</p>
-                <h1>Cloud Monitoring</h1>
-                <p class="subtitle">Monitor your application health and infrastructure.</p>
+                <div class="eyebrow">OVERVIEW / DASHBOARD</div>
+                <h1>Cloud-Native Platform</h1>
+                <p class="subtitle">
+                    Application health, monitoring and self-healing test results.
+                </p>
             </div>
-            <span class="live-label">● LOCAL ENVIRONMENT</span>
+            <div class="environment">● LOCAL DEMO ENVIRONMENT</div>
         </header>
 
-        <section class="summary">
-            <div id="health-alert" class="health-alert" role="alert" hidden>
-                   <strong>⚠ Service Alert: Backend Unhealthy</strong>
-                <p>The backend is not responding. Please check the service.</p>
-               </div>
-            <div class="summary-card">
-                <p>Application Health</p>
-                <h2 id="app-status">Checking...</h2>
-                <span>Backend API status</span>
-            </div>
-            <div class="summary-card">
-                <p>Metrics Collection</p>
-                <h2 id="monitor-status">Prometheus</h2>
-                <span>Application metrics</span>
-            </div>
-            <div class="summary-card">
-                <p>Visualization</p>
-                <h2>Grafana</h2>
-                <span>Monitoring dashboards</span>
-            </div>
+        <section class="cards">
+            <article class="card health-card">
+                <p class="card-label">Application Health</p>
+                <h2 id="app-status" aria-live="polite">Checking...</h2>
+                <p class="card-note" id="health-detail">
+                    Checking the backend health endpoint.
+                </p>
+            </article>
+
+            <article class="card">
+                <p class="card-label">Monitoring</p>
+                <h2>Prometheus</h2>
+                <p class="card-note">
+                    Scrapes backend metrics and monitoring service metrics.
+                </p>
+            </article>
+
+            <article class="card">
+                <p class="card-label">Kubernetes Autoscaling</p>
+                <h2>Test Passed</h2>
+                <p class="card-note">
+                    Earlier EKS test: CPU target 70%; replicas scaled from 2 to 3.
+                </p>
+            </article>
         </section>
 
         <section class="panel" id="services">
-            <div class="section-heading">
+            <div class="panel-header">
                 <div>
                     <h2>Service Overview</h2>
-                    <p>Check the status of your application services.</p>
+                    <p>Live health is checked for the local backend API.</p>
                 </div>
-                <button onclick="checkHealth()">↻ Check Health</button>
+                <button class="button" id="check-button" onclick="checkHealth()">
+                    ↻ Check Health
+                </button>
+            </div>
+
+            <div id="health-alert" class="alert" role="alert">
+                <strong>Service Alert: Backend Unhealthy</strong>
+                <div>
+                    The backend did not respond. Check that the backend container is running.
+                </div>
             </div>
 
             <div class="service-row">
                 <div class="service-icon">BE</div>
                 <div class="service-info">
                     <h3>Backend API</h3>
-                    <p>Express.js · Port 3000</p>
+                    <p>Node.js / Express · Port 3000 in container · Port 3002 locally</p>
                 </div>
-                <span id="service-status" class="status">Checking...</span>
+                <span id="backend-status" class="status checking">Checking</span>
+            </div>
+
+            <div class="service-row">
+                <div class="service-icon">FE</div>
+                <div class="service-info">
+                    <h3>Frontend</h3>
+                    <p>Nginx web server · Local port 8080</p>
+                </div>
+                <span class="status healthy">Configured</span>
             </div>
 
             <div class="service-row">
                 <div class="service-icon">PM</div>
                 <div class="service-info">
                     <h3>Prometheus</h3>
-                    <p>Metrics collection and monitoring</p>
+                    <p>Metrics collection · Local port 9090</p>
                 </div>
-                <a href="http://localhost:9090/targets" target="_blank" rel="noopener">View Targets ↗</a>
+                <a href="http://localhost:9090/targets"
+                   target="_blank" rel="noopener">View Targets ↗</a>
             </div>
 
             <div class="service-row">
                 <div class="service-icon">GF</div>
                 <div class="service-info">
                     <h3>Grafana</h3>
-                    <p>Graphs and monitoring dashboards</p>
+                    <p>Monitoring dashboards · Local port 3001</p>
                 </div>
-                <a href="http://localhost:3001" target="_blank" rel="noopener">Open Grafana ↗</a>
+                <a href="http://localhost:3001"
+                   target="_blank" rel="noopener">Open Grafana ↗</a>
             </div>
-            <p id="result" aria-live="polite"></p>
+        </section>
+
+        <section class="panel" id="tests">
+            <div class="panel-header">
+                <div>
+                    <h2>Self-Healing and Autoscaling Tests</h2>
+                    <p>
+                        Historical results from the earlier Kubernetes / EKS deployment.
+                        These are not live cluster metrics.
+                    </p>
+                </div>
+            </div>
+
+            <div class="history-grid">
+                <article class="history-card">
+                    <span class="tag">PREVIOUS KUBERNETES TEST</span>
+                    <h3>Pod Failure Recovery</h3>
+                    <p>
+                        A backend pod was deleted during testing. Kubernetes created
+                        a replacement to maintain the desired replica count.
+                    </p>
+                </article>
+
+                <article class="history-card">
+                    <span class="tag">PREVIOUS HPA TEST</span>
+                    <h3>CPU-Based Autoscaling</h3>
+                    <p>
+                        The configured CPU target was 70%. During a load test,
+                        CPU usage exceeded the target and backend replicas scaled
+                        from 2 to 3. These are recorded test results, not current values.
+                    </p>
+                </article>
+
+                <article class="history-card">
+                    <span class="tag">LOCAL TEST</span>
+                    <h3>Backend Failure and Recovery</h3>
+                    <p>
+                        Stopping the backend caused its health endpoint to become
+                        unreachable. Restarting the backend restored HTTP 200 and
+                        the healthy status response.
+                    </p>
+                </article>
+
+                <article class="history-card">
+                    <span class="tag">MONITORING TEST</span>
+                    <h3>Prometheus Target Health</h3>
+                    <p>
+                        The backend and Prometheus scrape targets were previously
+                        confirmed UP in the local monitoring setup.
+                    </p>
+                </article>
+            </div>
         </section>
 
         <section class="panel" id="monitoring">
-            <div class="section-heading">
+            <div class="panel-header">
                 <div>
-                    <h2>Monitoring Center</h2>
-                    <p>Explore live monitoring tools running locally.</p>
+                    <h2>Monitoring Tools</h2>
+                    <p>Open each local monitoring service.</p>
                 </div>
             </div>
-            <div class="tool-grid">
-                <div class="tool-card">
-                    <div class="tool-icon">◉</div>
-                    <h3>Prometheus</h3>
-                    <p>Collects and stores metrics from the backend application.</p>
-                    <a href="http://localhost:9090" target="_blank" rel="noopener">Explore Prometheus →</a>
-                </div>
-                <div class="tool-card">
-                    <div class="tool-icon">▥</div>
-                    <h3>Grafana</h3>
-                    <p>Visualizes monitoring data through charts and dashboards.</p>
-                    <a href="http://localhost:3001" target="_blank" rel="noopener">View Dashboards →</a>
-                </div>
+
+            <div class="monitor-links">
+                <a class="monitor-link" href="http://localhost:9090/targets"
+                   target="_blank" rel="noopener">
+                    <strong>Prometheus ↗</strong>
+                    <span>Inspect scrape targets and metric collection.</span>
+                </a>
+
+                <a class="monitor-link" href="http://localhost:3001"
+                   target="_blank" rel="noopener">
+                    <strong>Grafana ↗</strong>
+                    <span>View configured monitoring dashboards.</span>
+                </a>
+
+                <a class="monitor-link" href="http://localhost:3002/health"
+                   target="_blank" rel="noopener">
+                    <strong>Backend Health ↗</strong>
+                    <span>Open the backend health endpoint directly.</span>
+                </a>
             </div>
         </section>
 
-        <footer>CloudCare · Cloud-Native Self-Healing Platform · DevOps Final Project</footer>
+        <div class="footer">
+            CloudCare · Cloud-Native Self-Healing Platform · Local demonstration
+        </div>
     </main>
+</div>
 
-    <script src="script.js"></script>
+<script>
+    // This local demo checks the backend exposed on port 3002.
+    // It does not connect to the deleted AWS EKS cluster.
+    const HEALTH_URL = "http://localhost:3002/health";
+
+    async function checkHealth() {
+        const appStatus = document.getElementById("app-status");
+        const detail = document.getElementById("health-detail");
+        const backendStatus = document.getElementById("backend-status");
+        const alert = document.getElementById("health-alert");
+        const button = document.getElementById("check-button");
+
+        appStatus.textContent = "Checking...";
+        detail.textContent = "Requesting backend health endpoint...";
+        backendStatus.textContent = "Checking";
+        backendStatus.className = "status checking";
+        button.disabled = true;
+
+        try {
+            const response = await fetch(HEALTH_URL, {
+                method: "GET",
+                cache: "no-store"
+            });
+
+            if (!response.ok) {
+                throw new Error("Backend returned HTTP " + response.status);
+            }
+
+            const data = await response.json();
+
+            if (data.status !== "healthy") {
+                throw new Error("Backend did not report a healthy status");
+            }
+
+            appStatus.textContent = "Healthy";
+            detail.textContent = "Backend health endpoint responded successfully.";
+            backendStatus.textContent = "Healthy";
+            backendStatus.className = "status healthy";
+            alert.classList.remove("visible");
+        } catch (error) {
+            appStatus.textContent = "Unhealthy";
+            detail.textContent = "Backend health check failed.";
+            backendStatus.textContent = "Unhealthy";
+            backendStatus.className = "status failed";
+            alert.classList.add("visible");
+        } finally {
+            button.disabled = false;
+        }
+    }
+
+    // Check on page load and refresh the health status periodically.
+    checkHealth();
+    setInterval(checkHealth, 10000);
+</script>
 </body>
 </html>
