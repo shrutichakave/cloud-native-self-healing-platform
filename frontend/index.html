@@ -687,7 +687,7 @@
 <script>
     // This local demo checks the backend exposed on port 3002.
     // It does not connect to the deleted AWS EKS cluster.
-    const HEALTH_URL = "http://localhost:3002/health";
+    const HEALTH_URL = "/api/health";
 
     async function checkHealth() {
         const appStatus = document.getElementById("app-status");
