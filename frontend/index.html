@@ -532,10 +532,15 @@
             </article>
 
             <article class="card">
-                <p class="card-label">Kubernetes Autoscaling</p>
-                <h2>Test Passed</h2>
+                <p class="card-label">Kubernetes Autoscaling · Live</p>
+                <h2 id="autoscaling-status">Loading...</h2>
                 <p class="card-note">
-                    Earlier EKS test: CPU target 70%; replicas scaled from 2 to 3.
+                    Ready replicas: <strong id="ready-replicas">--</strong> /
+                    Desired: <strong id="desired-replicas">--</strong>
+                    <br>Current replicas: <strong id="current-replicas">--</strong>
+                    <br>CPU utilization: <strong id="current-cpu">--</strong> /
+                    Target: <strong id="target-cpu">--</strong>
+                    <br><span id="autoscaling-updated">Fetching live EKS data...</span>
                 </p>
             </article>
         </section>
@@ -624,7 +629,7 @@
                     <p>
                         The configured CPU target was 70%. During a load test,
                         CPU usage exceeded the target and backend replicas scaled
-                        from 2 to 3. These are recorded test results, not current values.
+                        from 2 to 5. These are recorded test results, not current values.
                     </p>
                 </article>
 
@@ -734,9 +739,36 @@
         }
     }
 
-    // Check on page load and refresh the health status periodically.
+    async function checkAutoscaling() {
+        try {
+            const response = await fetch("/api/autoscaling", { cache: "no-store" });
+            if (!response.ok) throw new Error("HTTP " + response.status);
+            const data = await response.json();
+
+            document.getElementById("autoscaling-status").textContent =
+                data.status === "active" ? "Autoscaling Active" : "Checking";
+            document.getElementById("ready-replicas").textContent = data.readyReplicas;
+            document.getElementById("desired-replicas").textContent = data.desiredReplicas;
+            document.getElementById("current-replicas").textContent = data.currentReplicas;
+            document.getElementById("current-cpu").textContent =
+                data.currentCPUUtilization == null ? "N/A" : data.currentCPUUtilization + "%";
+            document.getElementById("target-cpu").textContent =
+                data.targetCPUUtilization == null ? "N/A" : data.targetCPUUtilization + "%";
+            document.getElementById("autoscaling-updated").textContent =
+                "Last refreshed: " + new Date().toLocaleTimeString();
+        } catch (error) {
+            document.getElementById("autoscaling-status").textContent = "Unavailable";
+            document.getElementById("autoscaling-updated").textContent =
+                "Could not fetch live EKS scaling data.";
+            console.error("Autoscaling check failed:", error);
+        }
+    }
+
+    // Refresh health and live EKS autoscaling data.
     checkHealth();
     setInterval(checkHealth, 10000);
+    checkAutoscaling();
+    setInterval(checkAutoscaling, 5000);
 </script>
 </body>
 </html>
