@@ -103,6 +103,8 @@ pipeline {
             }
         }
 
+    }
+
     post {
         success {
             echo 'Build, security scans, and ECR image pushes completed successfully.'
