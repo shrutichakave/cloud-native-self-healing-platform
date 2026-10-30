@@ -75,9 +75,25 @@ pipeline {
                 '''
             }
         }
-        stage('Deploy to EKS') {
+                stage('Deploy to EKS') {
             steps {
                 sh '''
+                    set -e
+
+                    # Install kubectl for the Jenkins user
+                    ARCH=$(uname -m)
+                    if [ "$ARCH" = "x86_64" ]; then ARCH=amd64; fi
+                    if [ "$ARCH" = "aarch64" ]; then ARCH=arm64; fi
+
+                    VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt)
+                    curl -L -o kubectl "https://dl.k8s.io/release/${VERSION}/bin/linux/${ARCH}/kubectl"
+                    mkdir -p "$HOME/bin"
+                    install -m 0755 kubectl "$HOME/bin/kubectl"
+                    export PATH="$HOME/bin:$PATH"
+
+                    kubectl version --client
+
+                    # Connect to EKS and deploy
                     aws eks update-kubeconfig --name self-healing-eks --region ap-south-1
                     kubectl set image deployment/backend backend=$ECR_REGISTRY/self-healing-backend:v1
                     kubectl set image deployment/frontend frontend=$ECR_REGISTRY/self-healing-frontend:v2
@@ -86,8 +102,6 @@ pipeline {
                 '''
             }
         }
-
-    }
 
     post {
         success {
