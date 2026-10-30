@@ -24,13 +24,13 @@ pipeline {
 
         stage('Build Backend') {
             steps {
-                sh 'docker build -t self-healing-backend:v1 ./backend'
+                sh 'docker build -t self-healing-backend:v2 ./backend'
             }
         }
 
         stage('Scan Backend Image') {
             steps {
-                sh '/usr/bin/trivy --config "" image --severity HIGH,CRITICAL self-healing-backend:v1'
+                sh '/usr/bin/trivy --config "" image --severity HIGH,CRITICAL self-healing-backend:v2'
             }
         }
 
@@ -59,9 +59,9 @@ pipeline {
         stage('Push Backend to ECR') {
             steps {
                 sh '''
-                    docker tag self-healing-backend:v1 \
-                        "$ECR_REGISTRY/self-healing-backend:v1"
-                    docker push "$ECR_REGISTRY/self-healing-backend:v1"
+                    docker tag self-healing-backend:v2 \
+                        "$ECR_REGISTRY/self-healing-backend:v2"
+                    docker push "$ECR_REGISTRY/self-healing-backend:v2"
                 '''
             }
         }
@@ -95,7 +95,7 @@ pipeline {
 
                     # Connect to EKS and deploy
                     aws eks update-kubeconfig --name self-healing-eks --region ap-south-1
-                    kubectl set image deployment/backend backend=$ECR_REGISTRY/self-healing-backend:v1
+                    kubectl set image deployment/backend backend=$ECR_REGISTRY/self-healing-backend:v2
                     kubectl set image deployment/frontend frontend=$ECR_REGISTRY/self-healing-frontend:v2
                     kubectl rollout status deployment/backend
                     kubectl rollout status deployment/frontend
