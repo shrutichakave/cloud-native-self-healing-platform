@@ -7,6 +7,10 @@ resource "aws_ecr_repository" "backend" {
   }
 
   force_delete = false
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_ecr_repository" "frontend" {
@@ -18,4 +22,8 @@ resource "aws_ecr_repository" "frontend" {
   }
 
   force_delete = false
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }

@@ -17,6 +17,7 @@ spec:
         app: backend
 
     spec:
+      serviceAccountName: backend-monitor
       containers:
         - name: backend
           image: 290993050816.dkr.ecr.ap-south-1.amazonaws.com/self-healing-backend:v1
