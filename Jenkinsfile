@@ -75,6 +75,18 @@ pipeline {
                 '''
             }
         }
+        stage('Deploy to EKS') {
+            steps {
+                sh '''
+                    aws eks update-kubeconfig --name self-healing-eks --region ap-south-1
+                    kubectl set image deployment/backend backend=$ECR_REGISTRY/self-healing-backend:v1
+                    kubectl set image deployment/frontend frontend=$ECR_REGISTRY/self-healing-frontend:v2
+                    kubectl rollout status deployment/backend
+                    kubectl rollout status deployment/frontend
+                '''
+            }
+        }
+
     }
 
     post {
